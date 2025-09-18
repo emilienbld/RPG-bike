@@ -20,7 +20,9 @@ namespace RPGBike.Models
     {
         ReduitCrevaison,
         AugmenteConfort,
-        BoostCollation, 
-        FreinDisque
+        BoostCollation,
+        FreinDisque,
+        CasqueAero,
+        FormationPeloton
     }
 }
