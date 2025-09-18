@@ -1,4 +1,5 @@
 using System;
+using RPGBike.Models;
 
 namespace RPGBike.Models
 {
@@ -23,10 +24,24 @@ namespace RPGBike.Models
             Distance = distance;
         }
 
-        public int SimulerCourse(Velo velo, ref int credit)
+        public int SimulerCourse(Velo velo, ref int credit, bool pluie = true)
         {
             Console.WriteLine($"Début de la course {Nom} sur terrain {Terrain}, distance {Distance}km.");
-            int vitesseEffective = velo.Vitesse;
+            int vitesseEffective = velo.Vitesse + velo.GetBonusConfort();
+
+            if (pluie)
+            {
+                Console.WriteLine("Il pleut pendant la course !");
+                if (!velo.AUnAccessoire(ActionEffet.FreinDisque))
+                {
+                    vitesseEffective -= 3;
+                    Console.WriteLine("Votre vélo sans frein à disque roule moins vite sous la pluie.");
+                }
+                else
+                {
+                    Console.WriteLine("Vos freins à disque vous aident à maintenir votre vitesse sous la pluie.");
+                }
+            }
 
             switch (Terrain)
             {
@@ -44,13 +59,20 @@ namespace RPGBike.Models
                     break;
             }
 
-            Console.WriteLine($"Vitesse moyenne en fonction du terrain: {vitesseEffective} km/h");
+            Console.WriteLine($"Vitesse moyenne en fonction du terrain et accessoires : {vitesseEffective} km/h");
+
+            int risqueCrevaison = 10;
+            if (velo.AUnAccessoire(ActionEffet.ReduitCrevaison))
+            {
+                risqueCrevaison = 2;
+                Console.WriteLine("Votre pneu tubeless réduit fortement le risque de crevaison.");
+            }
 
             int eventChance = random.Next(100);
             bool crevaison = false;
             bool collation = false;
 
-            if (eventChance < 10)
+            if (eventChance < risqueCrevaison)
             {
                 crevaison = true;
                 Console.WriteLine("Vous avez crevé !");
@@ -69,8 +91,14 @@ namespace RPGBike.Models
             else if (eventChance < 20)
             {
                 collation = true;
-                Console.WriteLine("Vos supporters vous ont donné une collation, vous avez fait le plein d'énergie !");
-                vitesseEffective += 2;
+                int boostVitesse = 4;
+                if (velo.AUnAccessoire(ActionEffet.BoostCollation))
+                {
+                    boostVitesse = 6;
+                    Console.WriteLine("Grâce à la collation achetée, votre boost est plus efficace !");
+                }
+                vitesseEffective += boostVitesse;
+                Console.WriteLine($"Vos supporters vous ont donné une collation, vous avez fait le plein d'énergie (+{boostVitesse} km/h) !");
             }
             else
             {

@@ -1,3 +1,7 @@
+using System;
+using System.Collections.Generic;
+using RPGBike.Models;
+
 namespace RPGBike.Models
 {
     public class Velo
@@ -7,6 +11,8 @@ namespace RPGBike.Models
         public int Confort { get; set; }
         public int Resistance { get; set; }
         public int Cout { get; set; }
+
+        public List<Accessoire> Accessoires { get; private set; } = new();
 
         public Velo(string nom, int vitesse, int confort, int resistance, int cout)
         {
@@ -24,6 +30,41 @@ namespace RPGBike.Models
             Console.WriteLine($"Confort : {Confort}");
             Console.WriteLine($"Résistance : {Resistance}");
             Console.WriteLine($"Coût : {Cout} crédits");
+            if (Accessoires.Count > 0)
+            {
+                Console.WriteLine("Accessoires :");
+                foreach (var acc in Accessoires)
+                {
+                    Console.WriteLine($"- {acc.Nom}");
+                }
+            }
+        }
+
+        public void AjouterAccessoire(Accessoire accessoire)
+        {
+            Accessoires.Add(accessoire);
+            Console.WriteLine($"Accessoire {accessoire.Nom} ajouté au vélo {Nom}.");
+        }
+
+        public int GetBonusConfort()
+        {
+            int bonus = 0;
+            foreach (var acc in Accessoires)
+            {
+                if (acc.Effet == ActionEffet.AugmenteConfort)
+                    bonus += 2;
+            }
+            return bonus;
+        }
+
+        public bool AUnAccessoire(ActionEffet effet)
+        {
+            foreach (var acc in Accessoires)
+            {
+                if (acc.Effet == effet)
+                    return true;
+            }
+            return false;
         }
     }
 
