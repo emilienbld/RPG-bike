@@ -1,0 +1,15 @@
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.AssemblyInfoInputs.cache
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.AssemblyInfo.cs
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.csproj.CoreCompileInputs.cache
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.sourcelink.json
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\bin\Debug\net9.0\RPG.exe
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\bin\Debug\net9.0\RPG.deps.json
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\bin\Debug\net9.0\RPG.runtimeconfig.json
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\bin\Debug\net9.0\RPG.dll
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\bin\Debug\net9.0\RPG.pdb
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.dll
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\refint\RPG.dll
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.pdb
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\RPG.genruntimeconfig.cache
+C:\Users\33782\OneDrive\Documents\master_deux\prog_logiciel\RPG\obj\Debug\net9.0\ref\RPG.dll
