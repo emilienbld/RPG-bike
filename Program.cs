@@ -115,69 +115,134 @@ public class Course
     }
 }
 
+// class Program
+// {
+//     static void Main(string[] args)
+//     {
+//         Velo veloRoute = new VeloRoute();
+//         Velo veloGravel = new VeloGravel();
+//         Velo vtt = new VTT();
 
+//         Console.WriteLine("Infos vélo Route :");
+//         veloRoute.AfficherInfo();
+//         Console.WriteLine();
 
+//         Console.WriteLine("Infos vélo Gravel :");
+//         veloGravel.AfficherInfo();
+//         Console.WriteLine();
 
+//         Console.WriteLine("Infos VTT :");
+//         vtt.AfficherInfo();
+//         Console.WriteLine();
 
+//         int credit = 10;
 
+//         Course course1 = new Course("La Classique", TypeTerrain.Gravier, 20);
 
+//         Console.WriteLine("Course avec Vélo Route");
+//         course1.SimulerCourse(veloRoute, ref credit);
+//         Console.WriteLine($"Crédit restant : {credit}");
+//         Console.WriteLine();
 
+//         Console.WriteLine("Course avec Vélo Gravel");
+//         course1.SimulerCourse(veloGravel, ref credit);
+//         Console.WriteLine($"Crédit restant : {credit}");
+//         Console.WriteLine();
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+//         Console.WriteLine("Course avec VTT");
+//         course1.SimulerCourse(vtt, ref credit);
+//         Console.WriteLine($"Crédit restant : {credit}");
+//         Console.WriteLine();
+//     }
+// }
 
 class Program
 {
     static void Main(string[] args)
     {
-        Velo veloRoute = new VeloRoute();
-        Velo veloGravel = new VeloGravel();
-        Velo vtt = new VTT();
+        Velo[] velos = { new VeloRoute(), new VeloGravel(), new VTT() };
 
-        Console.WriteLine("Infos vélo Route :");
-        veloRoute.AfficherInfo();
-        Console.WriteLine();
+        Course[] courses = {
+            new Course("La Classique", TypeTerrain.Asphalte, 15),
+            new Course("La Gravière", TypeTerrain.Gravier, 20),
+            new Course("Sentier Sauvage", TypeTerrain.Sentier, 10)
+        };
 
-        Console.WriteLine("Infos vélo Gravel :");
-        veloGravel.AfficherInfo();
-        Console.WriteLine();
+        Velo choixVelo = null;
+        bool quitteJeu = false;
 
-        Console.WriteLine("Infos VTT :");
-        vtt.AfficherInfo();
-        Console.WriteLine();
+        while (!quitteJeu)
+        {
+            Console.Clear();
+            Console.WriteLine("=== RPG-bike ===");
+            Console.WriteLine("1 - Choisir un vélo");
+            Console.WriteLine("2 - Choisir une course");
+            Console.WriteLine("3 - Quitter");
+            Console.Write("Que voulez vous faire ? : ");
+            string choix = Console.ReadLine();
 
-        int credit = 10;
+            switch (choix)
+            {
+                case "1":
+                    Console.WriteLine("Choix du vélo :");
+                    for (int i = 0; i < velos.Length; i++)
+                    {
+                        Console.WriteLine($"{i + 1} - Vélo type : {velos[i].Nom} - Vitesse moyenne : {velos[i].Vitesse} km/h - Confort : {velos[i].Confort}/10 - Résistance : {velos[i].Resistance}/10");
+                    }
+                    Console.Write("Numéro du vélo : ");
+                    if (int.TryParse(Console.ReadLine(), out int numVelo) && numVelo >= 1 && numVelo <= velos.Length)
+                    {
+                        choixVelo = velos[numVelo - 1];
+                        Console.WriteLine($"Vous avez choisi : {choixVelo.Nom}");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Choix invalide.");
+                    }
+                    Console.WriteLine("Appuyez sur une touche pour continuer...");
+                    Console.ReadKey();
+                    break;
 
-        Course course1 = new Course("La Classique", TypeTerrain.Gravier, 20);
+                case "2":
+                    if (choixVelo == null)
+                    {
+                        Console.WriteLine("Vous devez d'abord choisir un vélo !");
+                    }
+                    else
+                    {
+                        Console.WriteLine("Choix de la course :");
+                        for (int i = 0; i < courses.Length; i++)
+                        {
+                            Console.WriteLine($"{i + 1} - {courses[i].Nom} ({courses[i].Terrain}, {courses[i].Distance} km)");
+                        }
+                        Console.Write("Numéro de la course : ");
+                        if (int.TryParse(Console.ReadLine(), out int numCourse) && numCourse >= 1 && numCourse <= courses.Length)
+                        {
+                            Course courseChoisie = courses[numCourse - 1];
+                            int credit = 10; 
+                            Console.WriteLine("Vous commencez avec 10 de crédits.");
+                            courseChoisie.SimulerCourse(choixVelo, ref credit);
+                        }
+                        else
+                        {
+                            Console.WriteLine("Choix invalide.");
+                        }
+                    }
+                    Console.WriteLine("Appuyez sur une touche pour continuer...");
+                    Console.ReadKey();
+                    break;
 
-        Console.WriteLine("Course avec Vélo Route");
-        course1.SimulerCourse(veloRoute, ref credit);
-        Console.WriteLine($"Crédit restant : {credit}");
-        Console.WriteLine();
+                case "3":
+                    quitteJeu = true;
+                    Console.WriteLine("Merci d'avoir joué. À bientôt !");
+                    break;
 
-        Console.WriteLine("Course avec Vélo Gravel");
-        course1.SimulerCourse(veloGravel, ref credit);
-        Console.WriteLine($"Crédit restant : {credit}");
-        Console.WriteLine();
-
-        Console.WriteLine("Course avec VTT");
-        course1.SimulerCourse(vtt, ref credit);
-        Console.WriteLine($"Crédit restant : {credit}");
-        Console.WriteLine();
+                default:
+                    Console.WriteLine("Choix invalide.");
+                    Console.WriteLine("Appuyez sur une touche pour continuer...");
+                    Console.ReadKey();
+                    break;
+            }
+        }
     }
 }
