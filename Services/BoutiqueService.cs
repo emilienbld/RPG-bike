@@ -35,11 +35,11 @@ namespace RPGBike.Services
         {
             Console.WriteLine("Bienvenue dans la boutique officielle !");
             Console.WriteLine("Voici ce que nous vendons aujourd'hui :");
-            Console.WriteLine("| Produit             | Prix (crédits) | Capacité / Effet                                   |");
-            Console.WriteLine("---------------------------------------------------------------------------------------");
+            Console.WriteLine("| Produit                 | Prix (crédits)  | Capacité / Effet                                   |");
+            Console.WriteLine(" ------------------------------------------------------------------------------------------------");
             foreach (var acc in Accessoires)
             {
-                Console.WriteLine($"| {acc.Nom.PadRight(19)} | {acc.Cout.ToString().PadRight(13)} | {acc.Description.PadRight(48)} |");
+                Console.WriteLine($"| {acc.Nom.PadRight(23)} | {acc.Cout.ToString().PadRight(15)} | {acc.Description.PadRight(50)} |");
             }
             Console.WriteLine();
         }

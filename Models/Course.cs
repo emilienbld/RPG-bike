@@ -25,8 +25,11 @@ namespace RPGBike.Models
             Distance = distance;
         }
 
-        public int SimulerCourse(Velo velo, PlayerService player, bool pluie = true)
+        public int SimulerCourse(Velo velo, PlayerService player, bool pluie = false)
         {
+            Random rnd = new Random();
+            pluie = rnd.Next(2) == 0;
+
             Console.WriteLine($"Début de la course {Nom} sur terrain {Terrain}, distance {Distance}km.");
             int vitesseEffective = velo.Vitesse + velo.GetBonusConfort();
 
@@ -69,7 +72,7 @@ namespace RPGBike.Models
             int risqueCrevaison = 50;
             if (velo.AUneAmelioration(ActionEffet.ReduitCrevaison))
             {
-                risqueCrevaison = 20;
+                risqueCrevaison = 10;
                 Console.WriteLine("Votre pneu tubeless réduit fortement le risque de crevaison.");
             }
 

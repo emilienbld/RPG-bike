@@ -53,13 +53,14 @@ namespace RPGBike
                             {
                                 choixVelo = veloChoisi;
                                 Console.WriteLine($"Vous avez choisi le vélo {choixVelo.Nom}. Il vous coûte {choixVelo.Cout} crédits.");
-                                Console.WriteLine($"Il vous reste {player.Credit} crédits.");
-                                Console.WriteLine("Choisissez maintenant une course (ou faites R pour une course aléatoire).");
+                                Console.WriteLine($"Banque : {player.Credit} crédits.");
+                                Console.WriteLine("Choisissez maintenant une course.");
                                 Console.WriteLine();
                             }
                             else
                             {
                                 Console.WriteLine("Vous n'avez pas assez de crédits pour ce vélo.");
+                                Console.WriteLine($"Banque : {player.Credit} crédits.");
                                 Console.WriteLine();
                             }
                         }
@@ -72,7 +73,7 @@ namespace RPGBike
 
                     case "2":
                         boutique.AfficherBoutique();
-                        Console.WriteLine($"Vous avez {player.Credit} crédits.");
+                        Console.WriteLine($"Banque : {player.Credit} crédits.");
                         Console.Write("Entrez le nom du produit à acheter ou Q pour quitter la boutique : ");
                         string achat = Console.ReadLine();
                         if (achat.ToUpper() == "Q") break;
@@ -86,6 +87,7 @@ namespace RPGBike
                         else if (player.Credit < accessoire.Cout)
                         {
                             Console.WriteLine("Crédits insuffisants.");
+                            Console.WriteLine($"Banque : {player.Credit} crédits.");
                             Console.WriteLine();
                         }
                         else if (choixVelo == null && accessoire.Type == AccessoireType.Amelioration)
@@ -104,7 +106,7 @@ namespace RPGBike
                             {
                                 player.AjouterConsommable(accessoire);
                             }
-                            Console.WriteLine($"Merci pour votre achat. Crédits restants : {player.Credit}");
+                            Console.WriteLine($"Merci pour votre achat. Banque : {player.Credit}");
                             Console.WriteLine();
                         }
                         break;

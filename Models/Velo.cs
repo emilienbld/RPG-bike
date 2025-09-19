@@ -48,11 +48,6 @@ namespace RPGBike.Models
                 Console.WriteLine($"Amélioration {accessoire.Nom} ajoutée au vélo {Nom}.");
                 Console.WriteLine();
             }
-            else
-            {
-                Console.WriteLine("Cet accessoire n'est pas une amélioration du vélo.");
-                Console.WriteLine();
-            }
         }
 
         public bool AUneAmelioration(ActionEffet effet)
@@ -79,16 +74,16 @@ namespace RPGBike.Models
 
     public class VeloRoute : Velo
     {
-        public VeloRoute() : base("Route", 10, 5, 6, 15) { }
+        public VeloRoute() : base("Route", 23, 5, 6, 15) { }
     }
 
     public class VeloGravel : Velo
     {
-        public VeloGravel() : base("Gravel", 8, 8, 7, 12) { }
+        public VeloGravel() : base("Gravel", 15, 8, 7, 12) { }
     }
 
     public class VTT : Velo
     {
-        public VTT() : base("VTT", 7, 9, 10, 10) { }
+        public VTT() : base("VTT", 10, 9, 10, 10) { }
     }
 }
