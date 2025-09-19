@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using RPGBike.Models;
 
 namespace RPGBike.Models
 {
@@ -12,7 +11,7 @@ namespace RPGBike.Models
         public int Resistance { get; set; }
         public int Cout { get; set; }
 
-        public List<Accessoire> Accessoires { get; private set; } = new();
+        public List<Accessoire> Ameliorations { get; private set; } = new();
 
         public Velo(string nom, int vitesse, int confort, int resistance, int cout)
         {
@@ -30,41 +29,51 @@ namespace RPGBike.Models
             Console.WriteLine($"Confort : {Confort}");
             Console.WriteLine($"Résistance : {Resistance}");
             Console.WriteLine($"Coût : {Cout} crédits");
-            if (Accessoires.Count > 0)
+            if (Ameliorations.Count > 0)
             {
-                Console.WriteLine("Accessoires :");
-                foreach (var acc in Accessoires)
+                Console.WriteLine("Améliorations :");
+                foreach (var acc in Ameliorations)
                 {
                     Console.WriteLine($"- {acc.Nom}");
                 }
             }
+            Console.WriteLine();
         }
 
-        public void AjouterAccessoire(Accessoire accessoire)
+        public void AjouterAmelioration(Accessoire accessoire)
         {
-            Accessoires.Add(accessoire);
-            Console.WriteLine($"Accessoire {accessoire.Nom} ajouté au vélo {Nom}.");
-        }
-
-        public int GetBonusConfort()
-        {
-            int bonus = 0;
-            foreach (var acc in Accessoires)
+            if (accessoire.Type == AccessoireType.Amelioration)
             {
-                if (acc.Effet == ActionEffet.AugmenteConfort)
-                    bonus += 2;
+                Ameliorations.Add(accessoire);
+                Console.WriteLine($"Amélioration {accessoire.Nom} ajoutée au vélo {Nom}.");
+                Console.WriteLine();
             }
-            return bonus;
+            else
+            {
+                Console.WriteLine("Cet accessoire n'est pas une amélioration du vélo.");
+                Console.WriteLine();
+            }
         }
 
-        public bool AUnAccessoire(ActionEffet effet)
+        public bool AUneAmelioration(ActionEffet effet)
         {
-            foreach (var acc in Accessoires)
+            foreach (var acc in Ameliorations)
             {
                 if (acc.Effet == effet)
                     return true;
             }
             return false;
+        }
+
+        public int GetBonusConfort()
+        {
+            int bonus = 0;
+            foreach (var acc in Ameliorations)
+            {
+                if (acc.Effet == ActionEffet.AugmenteConfort)
+                    bonus += 2;
+            }
+            return bonus;
         }
     }
 

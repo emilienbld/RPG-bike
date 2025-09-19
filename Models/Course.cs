@@ -1,5 +1,6 @@
 using System;
 using RPGBike.Models;
+using RPGBike.Services;
 
 namespace RPGBike.Models
 {
@@ -24,7 +25,7 @@ namespace RPGBike.Models
             Distance = distance;
         }
 
-        public int SimulerCourse(Velo velo, ref int credit, bool pluie = true)
+        public int SimulerCourse(Velo velo, PlayerService player, bool pluie = true)
         {
             Console.WriteLine($"Début de la course {Nom} sur terrain {Terrain}, distance {Distance}km.");
             int vitesseEffective = velo.Vitesse + velo.GetBonusConfort();
@@ -32,7 +33,7 @@ namespace RPGBike.Models
             if (pluie)
             {
                 Console.WriteLine("Il pleut pendant la course !");
-                if (!velo.AUnAccessoire(ActionEffet.FreinDisque))
+                if (!velo.AUneAmelioration(ActionEffet.FreinDisque))
                 {
                     vitesseEffective -= 3;
                     Console.WriteLine("Votre vélo sans frein à disque roule moins vite sous la pluie.");
@@ -41,6 +42,10 @@ namespace RPGBike.Models
                 {
                     Console.WriteLine("Vos freins à disque vous aident à maintenir votre vitesse sous la pluie.");
                 }
+            }
+            else
+            {
+                Console.WriteLine($"Vous profitez d'un beau temps pour cette course.");
             }
 
             switch (Terrain)
@@ -62,20 +67,19 @@ namespace RPGBike.Models
             Console.WriteLine($"Vitesse moyenne en fonction du terrain et accessoires : {vitesseEffective} km/h");
 
             int risqueCrevaison = 10;
-            if (velo.AUnAccessoire(ActionEffet.ReduitCrevaison))
+            if (velo.AUneAmelioration(ActionEffet.ReduitCrevaison))
             {
                 risqueCrevaison = 2;
                 Console.WriteLine("Votre pneu tubeless réduit fortement le risque de crevaison.");
             }
 
             int eventChance = random.Next(100);
-            bool crevaison = false;
             bool collation = false;
 
             bool formationPelotonActive = false;
             int pelotonBonusVitesse = 0;
 
-            if (velo.AUnAccessoire(ActionEffet.FormationPeloton))
+            if (velo.AUneAmelioration(ActionEffet.FormationPeloton))
             {
                 Console.WriteLine("Voulez-vous utiliser votre formation peloton pour booster votre vitesse ? (O/N)");
                 string repPeloton = Console.ReadLine().ToUpper();
@@ -91,7 +95,7 @@ namespace RPGBike.Models
                     if (rollAccident < risqueAccident)
                     {
                         Console.WriteLine("Accident dans le peloton !");
-                        if (velo.AUnAccessoire(ActionEffet.CasqueAero))
+                        if (velo.AUneAmelioration(ActionEffet.CasqueAero))
                         {
                             Console.WriteLine("Casque aérodynamique réduit les conséquences, mais vous avez perdu 2km/h de moyenne.");
                             vitesseEffective -= 2;
@@ -111,13 +115,12 @@ namespace RPGBike.Models
 
             if (eventChance < risqueCrevaison)
             {
-                crevaison = true;
                 Console.WriteLine("Vous avez crevé !");
                 Console.WriteLine("Voulez-vous dépenser 5 crédits pour réparation rapide ? (O/N)");
                 string rep = Console.ReadLine().ToUpper();
-                if (rep == "O" && credit >= 5)
+                if (rep == "O" && player.Credit >= 5)
                 {
-                    credit -= 5;
+                    player.DepenserCredits(5);
                     Console.WriteLine("Réparation express, vous reprenez la course et perdez que 1km/h de moyenne !");
                     vitesseEffective -= 1;
                 }
@@ -138,16 +141,23 @@ namespace RPGBike.Models
             {
                 Console.WriteLine("La course est très calme, vous n'avez pas beaucoup de supporters.");
             }
-            
-            if (velo.AUnAccessoire(ActionEffet.BoostCollation))
+
+            if (player.InventaireConsommables.Find(c => c.Accessoire.Effet == ActionEffet.BoostCollation) != null)
             {
-                Console.WriteLine("Vous avez une collation. Consommez-la maintenant ? (O/N)");
+                Console.WriteLine("Vous avez une collation. Voulez-vous la consommer maintenant ? (O/N)");
                 string repColl = Console.ReadLine().ToUpper();
                 if (repColl == "O")
                 {
-                    Console.WriteLine("Boost de 4 km/h pour 10 minutes activé !");
-                    vitesseEffective += 4;
-                    collation = true;
+                    bool consomme = player.UtiliserConsommable("Collation");
+                    if (consomme)
+                    {
+                        Console.WriteLine("Boost de 4 km/h pour 10 minutes activé !");
+                        vitesseEffective += 4;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Erreur: Vous n'avez plus de collation.");
+                    }
                 }
             }
 
@@ -157,10 +167,10 @@ namespace RPGBike.Models
             Console.WriteLine($"Temps estimé : {tempsMinutes} minutes.");
 
             int creditsGagnes = Distance + (formationPelotonActive ? pelotonBonusVitesse : 0);
-            credit += creditsGagnes;
+            player.AjouterCredits(creditsGagnes);
 
             Console.WriteLine($"Vous avez donc mis {tempsMinutes} minutes pour finir la course {Nom}.");
-            Console.WriteLine($"Cela vous fait un total de {credit} crédits.");
+            Console.WriteLine($"Cela vous fait un total de {player.Credit} crédits.");
 
             return tempsMinutes;
         }

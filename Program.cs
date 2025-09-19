@@ -1,5 +1,7 @@
 ﻿// using System;
+// using System.Collections.Generic;
 // using RPGBike.Models;
+// using RPGBike.Services;
 
 // namespace RPGBike
 // {
@@ -9,26 +11,26 @@
 //         {
 //             int credit = 20;
 //             Velo[] velos = { new VeloRoute(), new VeloGravel(), new VTT() };
-
 //             Course[] courses = {
 //                 new Course("La Classique", TypeTerrain.Asphalte, 15),
 //                 new Course("La Gravière", TypeTerrain.Gravier, 20),
 //                 new Course("Sentier Sauvage", TypeTerrain.Sentier, 10)
 //             };
+//             BoutiqueService boutique = new BoutiqueService();
 
 //             Velo choixVelo = null;
 //             bool quitteJeu = false;
 
 //             Console.Clear();
-//             Console.WriteLine($"Bienvenue dans RPG-bike ! Vous commencez avec {credit} crédits.");
-//             Console.WriteLine();
+//             Console.WriteLine($"Bienvenue dans RPG-bike ! Vous commencez avec {credit} crédits.\n");
 
 //             while (!quitteJeu)
 //             {
 //                 Console.WriteLine("=== RPG-bike ===");
 //                 Console.WriteLine("1 - Choisir un vélo");
-//                 Console.WriteLine("2 - Choisir une course");
-//                 Console.WriteLine("3 - Quitter");
+//                 Console.WriteLine("2 - Boutique");
+//                 Console.WriteLine("3 - Choisir une course");
+//                 Console.WriteLine("4 - Quitter");
 //                 Console.Write("Que voulez-vous faire ? : ");
 //                 string choix = Console.ReadLine();
 
@@ -65,6 +67,34 @@
 //                         break;
 
 //                     case "2":
+//                         boutique.AfficherBoutique();
+//                         Console.WriteLine($"Vous avez {credit} crédits.");
+//                         Console.Write("Entrez le nom du produit à acheter ou Q pour quitter la boutique : ");
+//                         string achat = Console.ReadLine();
+//                         if (achat.ToUpper() == "Q") break;
+
+//                         var accessoire = boutique.Accessoires.Find(a => a.Nom.Equals(achat, StringComparison.OrdinalIgnoreCase));
+//                         if (accessoire == null)
+//                         {
+//                             Console.WriteLine("Produit inconnu.");
+//                         }
+//                         else if (credit < accessoire.Cout)
+//                         {
+//                             Console.WriteLine("Crédits insuffisants.");
+//                         }
+//                         else if (choixVelo == null)
+//                         {
+//                             Console.WriteLine("Vous devez choisir un vélo avant d'acheter des accessoires.");
+//                         }
+//                         else
+//                         {
+//                             credit -= accessoire.Cout;
+//                             choixVelo.AjouterAccessoire(accessoire);
+//                             Console.WriteLine($"Merci pour votre achat. Crédits restants : {credit}");
+//                         }
+//                         break;
+
+//                     case "3":
 //                         if (choixVelo == null)
 //                         {
 //                             Console.WriteLine("Vous devez d'abord choisir un vélo !");
@@ -97,7 +127,7 @@
 //                         courseChoisie.SimulerCourse(choixVelo, ref credit);
 //                         break;
 
-//                     case "3":
+//                     case "4":
 //                         quitteJeu = true;
 //                         Console.WriteLine("Merci d'avoir joué. À bientôt !");
 //                         break;
@@ -107,15 +137,15 @@
 //                         break;
 //                 }
 
+//                 Console.WriteLine("Appuyez sur une touche pour continuer...");
+//                 Console.ReadKey();
 //                 Console.WriteLine();
 //             }
 //         }
 //     }
 // }
 
-
 using System;
-using System.Collections.Generic;
 using RPGBike.Models;
 using RPGBike.Services;
 
@@ -125,7 +155,7 @@ namespace RPGBike
     {
         static void Main(string[] args)
         {
-            int credit = 20;
+            PlayerService player = new PlayerService(20);
             Velo[] velos = { new VeloRoute(), new VeloGravel(), new VTT() };
             Course[] courses = {
                 new Course("La Classique", TypeTerrain.Asphalte, 15),
@@ -136,9 +166,10 @@ namespace RPGBike
 
             Velo choixVelo = null;
             bool quitteJeu = false;
-
+            
             Console.Clear();
-            Console.WriteLine($"Bienvenue dans RPG-bike ! Vous commencez avec {credit} crédits.\n");
+            Console.WriteLine("Bienvenue dans RPG-bike !");
+            Console.WriteLine($"Vous commencez avec {player.Credit} crédits.\n");
 
             while (!quitteJeu)
             {
@@ -146,8 +177,10 @@ namespace RPGBike
                 Console.WriteLine("1 - Choisir un vélo");
                 Console.WriteLine("2 - Boutique");
                 Console.WriteLine("3 - Choisir une course");
-                Console.WriteLine("4 - Quitter");
+                Console.WriteLine("4 - Inventaire consommables");
+                Console.WriteLine("5 - Quitter");
                 Console.Write("Que voulez-vous faire ? : ");
+                Console.WriteLine();
                 string choix = Console.ReadLine();
 
                 switch (choix)
@@ -162,29 +195,31 @@ namespace RPGBike
                         Console.Write("Numéro du vélo : ");
                         if (int.TryParse(Console.ReadLine(), out int numVelo) && numVelo >= 1 && numVelo <= velos.Length)
                         {
-                            Velo veloChoisi = velos[numVelo - 1];
-                            if (credit >= veloChoisi.Cout)
+                            var veloChoisi = velos[numVelo - 1];
+                            if (player.DepenserCredits(veloChoisi.Cout))
                             {
                                 choixVelo = veloChoisi;
-                                credit -= veloChoisi.Cout;
                                 Console.WriteLine($"Vous avez choisi le vélo {choixVelo.Nom}. Il vous coûte {choixVelo.Cout} crédits.");
-                                Console.WriteLine($"Il vous reste {credit} crédits.");
+                                Console.WriteLine($"Il vous reste {player.Credit} crédits.");
                                 Console.WriteLine("Choisissez maintenant une course (ou faites R pour une course aléatoire).");
+                                Console.WriteLine();
                             }
                             else
                             {
                                 Console.WriteLine("Vous n'avez pas assez de crédits pour ce vélo.");
+                                Console.WriteLine();
                             }
                         }
                         else
                         {
                             Console.WriteLine("Choix invalide.");
+                            Console.WriteLine();
                         }
                         break;
 
                     case "2":
                         boutique.AfficherBoutique();
-                        Console.WriteLine($"Vous avez {credit} crédits.");
+                        Console.WriteLine($"Vous avez {player.Credit} crédits.");
                         Console.Write("Entrez le nom du produit à acheter ou Q pour quitter la boutique : ");
                         string achat = Console.ReadLine();
                         if (achat.ToUpper() == "Q") break;
@@ -193,20 +228,31 @@ namespace RPGBike
                         if (accessoire == null)
                         {
                             Console.WriteLine("Produit inconnu.");
+                            Console.WriteLine();
                         }
-                        else if (credit < accessoire.Cout)
+                        else if (player.Credit < accessoire.Cout)
                         {
                             Console.WriteLine("Crédits insuffisants.");
+                            Console.WriteLine();
                         }
-                        else if (choixVelo == null)
+                        else if (choixVelo == null && accessoire.Type == AccessoireType.Amelioration)
                         {
-                            Console.WriteLine("Vous devez choisir un vélo avant d'acheter des accessoires.");
+                            Console.WriteLine("Vous devez choisir un vélo avant d'acheter des améliorations.");
+                            Console.WriteLine();
                         }
                         else
                         {
-                            credit -= accessoire.Cout;
-                            choixVelo.AjouterAccessoire(accessoire);
-                            Console.WriteLine($"Merci pour votre achat. Crédits restants : {credit}");
+                            player.DepenserCredits(accessoire.Cout);
+                            if (accessoire.Type == AccessoireType.Amelioration)
+                            {
+                                choixVelo.AjouterAmelioration(accessoire);
+                            }
+                            else
+                            {
+                                player.AjouterConsommable(accessoire);
+                            }
+                            Console.WriteLine($"Merci pour votre achat. Crédits restants : {player.Credit}");
+                            Console.WriteLine();
                         }
                         break;
 
@@ -214,6 +260,7 @@ namespace RPGBike
                         if (choixVelo == null)
                         {
                             Console.WriteLine("Vous devez d'abord choisir un vélo !");
+                            Console.WriteLine();
                             break;
                         }
                         Console.WriteLine("Choix de la course :");
@@ -226,38 +273,43 @@ namespace RPGBike
                         Course courseChoisie = null;
                         if (inputCourse.ToUpper() == "R")
                         {
-                            Random rnd = new();
+                            var rnd = new Random();
                             courseChoisie = courses[rnd.Next(courses.Length)];
                             Console.WriteLine($"Course aléatoire choisie : {courseChoisie.Nom}");
+                            Console.WriteLine();
                         }
                         else if (int.TryParse(inputCourse, out int numCourse) && numCourse >= 1 && numCourse <= courses.Length)
                         {
                             courseChoisie = courses[numCourse - 1];
                             Console.WriteLine($"Course choisie : {courseChoisie.Nom}");
+                            Console.WriteLine();
                         }
                         else
                         {
                             Console.WriteLine("Choix invalide.");
+                            Console.WriteLine();
                             break;
                         }
-                        courseChoisie.SimulerCourse(choixVelo, ref credit);
+                        courseChoisie.SimulerCourse(choixVelo, player);
                         break;
 
                     case "4":
+                        player.AfficherInventaire();
+                        break;
+
+                    case "5":
                         quitteJeu = true;
                         Console.WriteLine("Merci d'avoir joué. À bientôt !");
+                        Console.WriteLine();
                         break;
 
                     default:
                         Console.WriteLine("Choix invalide.");
+                        Console.WriteLine();
                         break;
                 }
-
-                Console.WriteLine("Appuyez sur une touche pour continuer...");
-                Console.ReadKey();
                 Console.WriteLine();
             }
         }
     }
 }
-
