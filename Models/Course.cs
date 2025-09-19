@@ -66,10 +66,10 @@ namespace RPGBike.Models
 
             Console.WriteLine($"Vitesse moyenne en fonction du terrain et accessoires : {vitesseEffective} km/h");
 
-            int risqueCrevaison = 10;
+            int risqueCrevaison = 50;
             if (velo.AUneAmelioration(ActionEffet.ReduitCrevaison))
             {
-                risqueCrevaison = 2;
+                risqueCrevaison = 20;
                 Console.WriteLine("Votre pneu tubeless réduit fortement le risque de crevaison.");
             }
 
@@ -90,7 +90,7 @@ namespace RPGBike.Models
                     pelotonBonusVitesse = nbCoEquipiers;
                     vitesseEffective += pelotonBonusVitesse;
                     Console.WriteLine($"Peloton avec {nbCoEquipiers} coéquipier(s), gain de vitesse {pelotonBonusVitesse} km/h !");
-                    int risqueAccident = 5 * nbCoEquipiers;
+                    int risqueAccident = 7 * nbCoEquipiers;
                     int rollAccident = random.Next(100);
                     if (rollAccident < risqueAccident)
                     {
@@ -131,7 +131,7 @@ namespace RPGBike.Models
                 }
             }
 
-            if (eventChance < 20)
+            if (eventChance < 70)
             {
                 collation = true;
                 Console.WriteLine($"Vos supporters vous ont donné une collation, vous avez fait le plein d'énergie (+4 km/h de moyenne) !");
